@@ -1,0 +1,20 @@
+{
+  "name": "agastya-services-portal",
+  "version": "1.0.0",
+  "description": "High-performance single-page corporate website for Agastya Services - Staffing and Workforce Solutions",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "serve": "node server.js"
+  },
+  "keywords": [
+    "agastya-services",
+    "staffing",
+    "recruitment",
+    "cyncly-partnership",
+    "content-engineer",
+    "workforce-solutions"
+  ],
+  "author": "Agastya Services - Hitesh Pandey",
+  "license": "ISC"
+}

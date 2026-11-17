@@ -1,0 +1,291 @@
+/* Agastya Services - Brand Identity & Custom Design System
+   Themed precisely to official logo: Deep Corporate Navy Blue & Vibrant Energetic Orange */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --brand-navy-dark: #050c18;
+  --brand-navy: #002147;
+  --brand-navy-light: #0b254a;
+  --brand-blue: #0260cb;
+  --brand-orange: #ff6b00;
+  --brand-orange-light: #f97316;
+  --brand-amber: #fbbf24;
+  --brand-surface: rgba(9, 23, 46, 0.78);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #050c18;
+  color: #f8fafc;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 9px;
+}
+::-webkit-scrollbar-track {
+  background: #050c18;
+}
+::-webkit-scrollbar-thumb {
+  background: #0f274a;
+  border-radius: 9999px;
+  border: 2px solid #050c18;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ff6b00;
+}
+
+/* Brand Gradients matching the Logo */
+.text-gradient-orange {
+  background: linear-gradient(135deg, #ffaa66 0%, #ff7300 50%, #f97316 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-blue {
+  background: linear-gradient(135deg, #60a5fa 0%, #2563eb 50%, #00296b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-brand {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 40%, #ff7300 85%, #ffa500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Logo Tagline Style with orange flanking dashes */
+.logo-tagline {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.logo-tagline::before,
+.logo-tagline::after {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 2px;
+  background: #ff6b00;
+  border-radius: 2px;
+}
+
+/* Glassmorphism Classes with Navy/Orange Tint */
+.glass-panel {
+  background: rgba(8, 22, 44, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-hover {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-hover:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 107, 0, 0.45);
+  box-shadow: 0 20px 40px -15px rgba(255, 107, 0, 0.18), 0 0 25px rgba(2, 96, 203, 0.15);
+}
+
+.glass-card-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card-glow::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 107, 0, 0.09) 0%, rgba(2, 96, 203, 0.06) 40%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.glass-card-glow:hover::before {
+  opacity: 1;
+}
+
+/* Ambient glow blobs themed to Navy and Orange */
+.glow-blob-navy {
+  position: absolute;
+  filter: blur(130px);
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle, rgba(2, 96, 203, 0.35) 0%, rgba(0, 33, 71, 0.2) 70%, transparent 100%);
+}
+
+.glow-blob-orange {
+  position: absolute;
+  filter: blur(140px);
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle, rgba(255, 107, 0, 0.32) 0%, rgba(249, 115, 22, 0.12) 60%, transparent 100%);
+}
+
+.glow-blob-amber {
+  position: absolute;
+  filter: blur(120px);
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle, rgba(251, 146, 60, 0.25) 0%, transparent 70%);
+}
+
+/* Floating animation */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(1deg);
+  }
+}
+
+@keyframes floatReverse {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(10px) rotate(-1deg);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: floatReverse 7s ease-in-out infinite;
+}
+
+/* Orange Pulse indicator */
+.pulse-indicator-orange {
+  position: relative;
+}
+.pulse-indicator-orange::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: #ff6b00;
+  opacity: 0.7;
+  animation: rippleOrange 2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+@keyframes rippleOrange {
+  0% {
+    width: 8px;
+    height: 8px;
+    opacity: 0.9;
+  }
+  100% {
+    width: 28px;
+    height: 28px;
+    opacity: 0;
+  }
+}
+
+/* Tab button active state in Brand Orange & Navy */
+.role-tab-btn.active {
+  background: linear-gradient(135deg, #ff7300 0%, #ea580c 100%);
+  color: #ffffff;
+  border-color: #ff9e42;
+  box-shadow: 0 4px 20px -2px rgba(255, 107, 0, 0.5);
+}
+
+/* Reveal on scroll */
+.reveal-init {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-init.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.delay-100 { transition-delay: 0.1s; }
+.delay-200 { transition-delay: 0.2s; }
+.delay-300 { transition-delay: 0.3s; }
+.delay-400 { transition-delay: 0.4s; }
+
+/* Custom Checkmark with Orange accent */
+.custom-check-li {
+  position: relative;
+  padding-left: 2rem;
+}
+.custom-check-li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 9999px;
+  background: rgba(255, 107, 0, 0.16);
+  color: #ff7300;
+  font-size: 0.75rem;
+  font-weight: 800;
+  border: 1px solid rgba(255, 107, 0, 0.4);
+}
+
+/* Button Shimmer */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: rotate(30deg);
+  transition: none;
+}
+.btn-shimmer:hover::after {
+  left: 120%;
+  transition: all 0.75s ease-in-out;
+}
+
+/* Official Logo Plaque Card */
+.logo-container-card {
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 30px rgba(0, 33, 71, 0.25), 0 0 15px rgba(255, 107, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.logo-container-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 35px rgba(0, 33, 71, 0.3), 0 0 22px rgba(255, 107, 0, 0.35);
+}
