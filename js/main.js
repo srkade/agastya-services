@@ -1,9 +1,10 @@
 /**
- * Agastya Services - High Performance Interactive Script
- * Updated Theme: Corporate Deep Navy Blue & Energetic Brand Orange
+ * Agastya Services - Interactive Script
+ * Adaptive Dual Theme (Corporate Light / Deep Dark), Mobile Optimizations & Canvas
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initThemeToggle();
   initHeroCanvas();
   initScrollAnimations();
   initCounterStats();
@@ -17,7 +18,64 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================================================
-   1. HERO CONSTELLATION CANVAS (Agastya Navy & Orange Talent Network)
+   1. THEME SWITCHER (Light Corporate <-> Dark Executive)
+   ========================================================================== */
+let redrawCanvasColors = null;
+
+function initThemeToggle() {
+  const toggleBtns = document.querySelectorAll('.theme-toggle-btn');
+  const htmlEl = document.documentElement;
+
+  // Retrieve saved theme or default to light
+  const savedTheme = localStorage.getItem('agastya-theme') || 'light';
+  applyTheme(savedTheme);
+
+  function applyTheme(theme) {
+    if (theme === 'dark') {
+      htmlEl.classList.add('dark');
+      htmlEl.classList.remove('light');
+    } else {
+      htmlEl.classList.remove('dark');
+      htmlEl.classList.add('light');
+    }
+    localStorage.setItem('agastya-theme', theme);
+    updateToggleIcons(theme);
+
+    if (typeof redrawCanvasColors === 'function') {
+      redrawCanvasColors();
+    }
+  }
+
+  function updateToggleIcons(theme) {
+    toggleBtns.forEach((btn) => {
+      const sunIcon = btn.querySelector('.theme-icon-sun');
+      const moonIcon = btn.querySelector('.theme-icon-moon');
+      const labelText = btn.querySelector('.theme-toggle-label');
+
+      if (theme === 'dark') {
+        if (sunIcon) sunIcon.classList.remove('hidden');
+        if (moonIcon) moonIcon.classList.add('hidden');
+        if (labelText) labelText.textContent = 'Light Mode';
+        btn.setAttribute('title', 'Switch to Light Mode');
+      } else {
+        if (sunIcon) sunIcon.classList.add('hidden');
+        if (moonIcon) moonIcon.classList.remove('hidden');
+        if (labelText) labelText.textContent = 'Dark Mode';
+        btn.setAttribute('title', 'Switch to Dark Mode');
+      }
+    });
+  }
+
+  toggleBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const isDark = htmlEl.classList.contains('dark');
+      applyTheme(isDark ? 'light' : 'dark');
+    });
+  });
+}
+
+/* ==========================================================================
+   2. HERO CONSTELLATION CANVAS (Mobile & Dual-Theme Optimized)
    ========================================================================== */
 function initHeroCanvas() {
   const canvas = document.getElementById('heroCanvas');
@@ -27,11 +85,11 @@ function initHeroCanvas() {
   let width = (canvas.width = canvas.parentElement.offsetWidth);
   let height = (canvas.height = canvas.parentElement.offsetHeight);
 
-  const particles = [];
-  const particleCount = Math.min(Math.floor((width * height) / 11000), 80);
-  const maxDistance = 130;
+  const isMobile = window.innerWidth < 768;
+  const particleCount = isMobile ? 32 : Math.min(Math.floor((width * height) / 13000), 75);
+  const maxDistance = isMobile ? 95 : 125;
 
-  let mouse = { x: null, y: null, radius: 150 };
+  let mouse = { x: null, y: null, radius: 140 };
 
   window.addEventListener('resize', () => {
     if (!canvas.parentElement) return;
@@ -39,29 +97,40 @@ function initHeroCanvas() {
     height = canvas.height = canvas.parentElement.offsetHeight;
   });
 
-  window.addEventListener('mousemove', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    mouse.x = e.clientX - rect.left;
-    mouse.y = e.clientY - rect.top;
-  });
+  if (!isMobile) {
+    window.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    });
 
-  window.addEventListener('mouseleave', () => {
-    mouse.x = null;
-    mouse.y = null;
-  });
+    window.addEventListener('mouseleave', () => {
+      mouse.x = null;
+      mouse.y = null;
+    });
+  }
 
-  // Color palette strictly from the Agastya Services logo: Orange, Royal Blue, White
-  const brandColors = ['#ff6b00', '#ff8533', '#0260cb', '#3b82f6', '#ffffff'];
+  function getPalette() {
+    const isDark = document.documentElement.classList.contains('dark');
+    return isDark
+      ? ['#ff6b00', '#ff8533', '#0260cb', '#3b82f6', '#ffffff']
+      : ['#ff6b00', '#ea580c', '#002147', '#0260cb', '#cbd5e1'];
+  }
 
   class Particle {
     constructor() {
       this.x = Math.random() * width;
       this.y = Math.random() * height;
-      this.vx = (Math.random() - 0.5) * 0.75;
-      this.vy = (Math.random() - 0.5) * 0.75;
-      this.radius = Math.random() * 2.2 + 1.2;
-      this.color = brandColors[Math.floor(Math.random() * brandColors.length)];
-      this.isOrange = this.color.includes('ff6b') || this.color.includes('ff85');
+      this.vx = (Math.random() - 0.5) * (isMobile ? 0.45 : 0.7);
+      this.vy = (Math.random() - 0.5) * (isMobile ? 0.45 : 0.7);
+      this.radius = Math.random() * 2 + 1.2;
+      this.paletteIndex = Math.floor(Math.random() * 5);
+      this.color = getPalette()[this.paletteIndex];
+      this.isOrange = this.paletteIndex <= 1;
+    }
+
+    refreshColor() {
+      this.color = getPalette()[this.paletteIndex];
     }
 
     update() {
@@ -71,15 +140,14 @@ function initHeroCanvas() {
       if (this.x < 0 || this.x > width) this.vx *= -1;
       if (this.y < 0 || this.y > height) this.vy *= -1;
 
-      // Mouse interactive push
-      if (mouse.x !== null && mouse.y !== null) {
+      if (!isMobile && mouse.x !== null && mouse.y !== null) {
         const dx = mouse.x - this.x;
         const dy = mouse.y - this.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < mouse.radius) {
           const force = (mouse.radius - dist) / mouse.radius;
-          this.x -= (dx / dist) * force * 2.8;
-          this.y -= (dy / dist) * force * 2.8;
+          this.x -= (dx / dist) * force * 2.2;
+          this.y -= (dy / dist) * force * 2.2;
         }
       }
     }
@@ -88,19 +156,22 @@ function initHeroCanvas() {
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
       ctx.fillStyle = this.color;
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = this.color;
       ctx.fill();
-      ctx.shadowBlur = 0;
     }
   }
 
+  const particles = [];
   for (let i = 0; i < particleCount; i++) {
     particles.push(new Particle());
   }
 
+  redrawCanvasColors = () => {
+    particles.forEach((p) => p.refreshColor());
+  };
+
   function animate() {
     ctx.clearRect(0, 0, width, height);
+    const isDark = document.documentElement.classList.contains('dark');
 
     for (let i = 0; i < particles.length; i++) {
       particles[i].update();
@@ -112,18 +183,19 @@ function initHeroCanvas() {
         const dist = Math.sqrt(dx * dx + dy * dy);
 
         if (dist < maxDistance) {
-          const opacity = (1 - dist / maxDistance) * 0.38;
+          const opacity = (1 - dist / maxDistance) * (isDark ? 0.35 : 0.22);
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
 
-          // Orange and Royal Blue connectivity
           if (particles[i].isOrange || particles[j].isOrange) {
             ctx.strokeStyle = `rgba(255, 107, 0, ${opacity})`;
           } else {
-            ctx.strokeStyle = `rgba(2, 96, 203, ${opacity})`;
+            ctx.strokeStyle = isDark
+              ? `rgba(2, 96, 203, ${opacity})`
+              : `rgba(0, 33, 71, ${opacity * 0.9})`;
           }
-          ctx.lineWidth = 0.95;
+          ctx.lineWidth = 0.85;
           ctx.stroke();
         }
       }
@@ -135,7 +207,7 @@ function initHeroCanvas() {
 }
 
 /* ==========================================================================
-   2. SCROLL REVEAL OBSERVER
+   3. SCROLL REVEAL OBSERVER
    ========================================================================== */
 function initScrollAnimations() {
   const revealElements = document.querySelectorAll('.reveal-init');
@@ -150,14 +222,14 @@ function initScrollAnimations() {
         }
       });
     },
-    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    { threshold: 0.08, rootMargin: '0px 0px -25px 0px' }
   );
 
   revealElements.forEach((el) => observer.observe(el));
 }
 
 /* ==========================================================================
-   3. ANIMATED COUNTERS
+   4. ANIMATED COUNTERS
    ========================================================================== */
 function initCounterStats() {
   const counterElements = document.querySelectorAll('[data-counter-target]');
@@ -169,8 +241,8 @@ function initCounterStats() {
         if (entry.isIntersecting) {
           const el = entry.target;
           const target = parseInt(el.getAttribute('data-counter-target'), 10);
-          const duration = 1800; // ms
-          const stepTime = 20;
+          const duration = 1600;
+          const stepTime = 25;
           const totalSteps = duration / stepTime;
           const increment = target / totalSteps;
           let current = 0;
@@ -189,32 +261,46 @@ function initCounterStats() {
         }
       });
     },
-    { threshold: 0.4 }
+    { threshold: 0.3 }
   );
 
   counterElements.forEach((el) => counterObserver.observe(el));
 }
 
 /* ==========================================================================
-   4. NAVBAR SCROLL EFFECT
+   5. NAVBAR SCROLL EFFECT
    ========================================================================== */
 function initNavbarScroll() {
   const navbar = document.getElementById('mainNav');
   if (!navbar) return;
 
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 40) {
-      navbar.classList.add('bg-[#050c18]/95', 'backdrop-blur-md', 'shadow-2xl', 'shadow-black/50', 'border-b', 'border-[#0f274a]');
+    if (window.scrollY > 30) {
+      navbar.classList.add(
+        'bg-white/95',
+        'dark:bg-[#050c18]/95',
+        'backdrop-blur-md',
+        'shadow-md',
+        'border-b',
+        'border-slate-200/80',
+        'dark:border-[#0f274a]'
+      );
       navbar.classList.remove('bg-transparent', 'border-transparent');
     } else {
-      navbar.classList.remove('bg-[#050c18]/95', 'shadow-2xl', 'shadow-black/50', 'border-[#0f274a]');
+      navbar.classList.remove(
+        'bg-white/95',
+        'dark:bg-[#050c18]/95',
+        'shadow-md',
+        'border-slate-200/80',
+        'dark:border-[#0f274a]'
+      );
       navbar.classList.add('bg-transparent', 'border-transparent');
     }
   });
 }
 
 /* ==========================================================================
-   5. MOBILE MENU
+   6. MOBILE MENU & TOUCH ERGONOMICS
    ========================================================================== */
 function initMobileMenu() {
   const toggleBtn = document.getElementById('mobileMenuToggle');
@@ -245,7 +331,7 @@ function initMobileMenu() {
 }
 
 /* ==========================================================================
-   6. CYNCLY ROLE TABS SYSTEM
+   7. CYNCLY ROLE TABS SYSTEM (WITH MOBILE AUTO-SCROLL)
    ========================================================================== */
 function initRoleTabs() {
   const tabButtons = document.querySelectorAll('.role-tab-btn');
@@ -260,6 +346,11 @@ function initRoleTabs() {
       // Update button states
       tabButtons.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
+
+      // Smooth scroll active tab button into center view on mobile devices
+      if (window.innerWidth < 640) {
+        btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
 
       // Update tab pane visibility
       tabPanes.forEach((pane) => {
@@ -276,7 +367,7 @@ function initRoleTabs() {
 }
 
 /* ==========================================================================
-   7. INTERACTIVE MANPOWER & COST ESTIMATOR
+   8. INTERACTIVE MANPOWER & COST ESTIMATOR
    ========================================================================== */
 function initSalaryCalculator() {
   const countSlider = document.getElementById('calcHeadcount');
@@ -293,30 +384,27 @@ function initSalaryCalculator() {
   function updateEstimates() {
     const count = parseInt(countSlider.value, 10);
     const roleType = roleSelect ? roleSelect.value : 'content-engineer';
-    const hiringModel = modelSelect ? modelSelect.value : 'contract-to-hire';
 
     countDisplay.innerText = `${count} ${count === 1 ? 'Specialist' : 'Specialists'}`;
 
-    // Sourcing Turnaround logic
     if (count <= 3) {
       turnaroundDisplay.innerText = 'Immediate to 15 Days';
     } else if (count <= 10) {
       turnaroundDisplay.innerText = '15 - 30 Days (Standard Cyncly Model)';
     } else {
-      turnaroundDisplay.innerText = '30 - 45 Days (Phased Deployment)';
+      turnaroundDisplay.innerText = '30 - 45 Days (Phased Batch Deployment)';
     }
 
     const internalHiringOverheadPerHead = 35000;
     const estimatedSavings = Math.round(count * internalHiringOverheadPerHead * 0.42);
-
     savingsDisplay.innerText = `₹${(estimatedSavings / 1000).toFixed(0)}k+`;
 
     if (count >= 10) {
-      supportTierDisplay.innerText = 'Dedicated Key Account Manager + Onsite SLA';
+      supportTierDisplay.innerText = 'Dedicated Account Manager + Onsite SLA';
     } else if (count >= 5) {
-      supportTierDisplay.innerText = 'Priority Technical Recruiter & 30-Day Transition Support';
+      supportTierDisplay.innerText = 'Priority Recruiter & 30-Day Transition Support';
     } else {
-      supportTierDisplay.innerText = 'Fast-Track Talent Delivery & Compliance Guarantee';
+      supportTierDisplay.innerText = 'Fast-Track Delivery & Statutory Guarantee';
     }
   }
 
@@ -328,20 +416,17 @@ function initSalaryCalculator() {
 }
 
 /* ==========================================================================
-   8. MODALS (Candidate Apply & Employer Staffing)
+   9. MODALS (Candidate Apply & Employer Staffing)
    ========================================================================== */
 function initModals() {
-  // Apply Modal
   const applyModal = document.getElementById('applyModal');
   const openApplyBtns = document.querySelectorAll('.open-apply-modal');
   const closeApplyBtn = document.getElementById('closeApplyModal');
 
-  // Hire Modal
   const hireModal = document.getElementById('hireModal');
   const openHireBtns = document.querySelectorAll('.open-hire-modal');
   const closeHireBtn = document.getElementById('closeHireModal');
 
-  // Open Apply
   openApplyBtns.forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -356,7 +441,6 @@ function initModals() {
     });
   });
 
-  // Close Apply
   if (closeApplyBtn && applyModal) {
     closeApplyBtn.addEventListener('click', () => {
       applyModal.classList.add('hidden');
@@ -364,7 +448,6 @@ function initModals() {
     });
   }
 
-  // Open Hire
   openHireBtns.forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -375,7 +458,6 @@ function initModals() {
     });
   });
 
-  // Close Hire
   if (closeHireBtn && hireModal) {
     closeHireBtn.addEventListener('click', () => {
       hireModal.classList.add('hidden');
@@ -383,7 +465,6 @@ function initModals() {
     });
   }
 
-  // Close on outside backdrop click
   window.addEventListener('click', (e) => {
     if (applyModal && e.target === applyModal) {
       applyModal.classList.add('hidden');
@@ -395,7 +476,6 @@ function initModals() {
     }
   });
 
-  // Close on ESC key
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       if (applyModal && !applyModal.classList.contains('hidden')) {
@@ -411,7 +491,7 @@ function initModals() {
 }
 
 /* ==========================================================================
-   9. INTERACTIVE FORMS & WHATSAPP GENERATION
+   10. INTERACTIVE FORMS & WHATSAPP GENERATION
    ========================================================================== */
 function initContactForms() {
   const mainContactForm = document.getElementById('mainContactForm');
@@ -434,10 +514,10 @@ function initContactForms() {
       );
       const whatsappUrl = `https://wa.me/918983575960?text=${waText}`;
 
-      showToast('Thank you! Redirecting to WhatsApp to send message to Hitesh Pandey...', 'success');
+      showToast('Redirecting to WhatsApp to send message to Hitesh Pandey...', 'success');
       setTimeout(() => {
         window.open(whatsappUrl, '_blank');
-      }, 850);
+      }, 750);
 
       mainContactForm.reset();
     });
@@ -464,12 +544,12 @@ function initContactForms() {
       );
       const whatsappUrl = `https://wa.me/918983575960?text=${waText}`;
 
-      showToast('Application drafted! Connecting directly to Hitesh Pandey on WhatsApp...', 'success');
+      showToast('Application drafted! Connecting directly to Hitesh Pandey...', 'success');
       setTimeout(() => {
         window.open(whatsappUrl, '_blank');
         document.getElementById('applyModal')?.classList.add('hidden');
         document.body.style.overflow = '';
-      }, 950);
+      }, 850);
 
       candidateModalForm.reset();
     });
@@ -501,7 +581,7 @@ function initContactForms() {
         window.open(whatsappUrl, '_blank');
         document.getElementById('hireModal')?.classList.add('hidden');
         document.body.style.overflow = '';
-      }, 950);
+      }, 850);
 
       employerModalForm.reset();
     });
@@ -509,7 +589,7 @@ function initContactForms() {
 }
 
 /* ==========================================================================
-   10. COPY CLIPBOARD & TOAST NOTIFICATION
+   11. COPY CLIPBOARD & TOAST NOTIFICATION
    ========================================================================== */
 function initClipboardButtons() {
   const copyButtons = document.querySelectorAll('.copy-trigger');
@@ -523,7 +603,7 @@ function initClipboardButtons() {
       navigator.clipboard.writeText(textToCopy).then(() => {
         showToast(`Copied to clipboard: ${textToCopy}`, 'success');
       }).catch(() => {
-        showToast('Could not copy automatically. Please select text manually.', 'error');
+        showToast('Could not copy automatically. Please copy manually.', 'error');
       });
     });
   });
@@ -534,20 +614,21 @@ function showToast(message, type = 'success') {
   if (!toastContainer) {
     toastContainer = document.createElement('div');
     toastContainer.id = 'toastContainer';
-    toastContainer.className = 'fixed bottom-5 right-5 z-[99999] flex flex-col gap-2 pointer-events-none';
+    toastContainer.className = 'fixed bottom-5 right-5 z-[99999] flex flex-col gap-2 pointer-events-none max-w-[90vw]';
     document.body.appendChild(toastContainer);
   }
 
   const toast = document.createElement('div');
-  const bgClass = type === 'success' 
-    ? 'bg-[#0b1b36] border-[#ff6b00]/60 text-orange-200' 
-    : 'bg-[#1e1010] border-rose-500/60 text-rose-300';
+  const isDark = document.documentElement.classList.contains('dark');
+  const bgClass = type === 'success'
+    ? (isDark ? 'bg-[#0b1b36] border-[#ff6b00]/60 text-orange-200' : 'bg-white border-orange-500 text-slate-800 shadow-xl')
+    : (isDark ? 'bg-[#1e1010] border-rose-500/60 text-rose-300' : 'bg-rose-50 border-rose-400 text-rose-800 shadow-xl');
   const icon = type === 'success' ? '✓' : '⚠';
 
-  toast.className = `flex items-center gap-3 px-5 py-3.5 rounded-xl border shadow-2xl backdrop-blur-lg transform transition-all duration-300 translate-y-8 opacity-0 pointer-events-auto ${bgClass}`;
+  toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl border shadow-2xl backdrop-blur-lg transform transition-all duration-300 translate-y-8 opacity-0 pointer-events-auto ${bgClass}`;
   toast.innerHTML = `
-    <span class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${type === 'success' ? 'bg-[#ff6b00]/25 text-[#ff8533]' : 'bg-rose-500/20 text-rose-400'}">${icon}</span>
-    <span class="text-sm font-medium text-slate-100">${message}</span>
+    <span class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${type === 'success' ? 'bg-[#ff6b00] text-white' : 'bg-rose-500 text-white'}">${icon}</span>
+    <span class="text-xs sm:text-sm font-semibold">${message}</span>
   `;
 
   toastContainer.appendChild(toast);
@@ -561,5 +642,5 @@ function showToast(message, type = 'success') {
     setTimeout(() => {
       toast.remove();
     }, 350);
-  }, 4200);
+  }, 4000);
 }
