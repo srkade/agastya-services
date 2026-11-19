@@ -280,15 +280,18 @@ html.dark .glow-blob-orange {
 
 /* Logo container styling */
 .brand-logo-img {
-  height: 42px;
+  height: 44px;
   width: auto;
   object-fit: contain;
   transition: transform 0.25s ease;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 @media (max-width: 640px) {
   .brand-logo-img {
-    height: 34px;
+    height: 36px;
   }
   
   /* Prevent touch drag on hero canvas so mobile scroll is smooth */
