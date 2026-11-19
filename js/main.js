@@ -1,6 +1,8 @@
 /**
  * Agastya Services - Interactive Script
  * Adaptive Dual Theme (Corporate Light / Deep Dark), Mobile Optimizations & Canvas
+ * Leadership: Milan Chaudhari
+ * Contact: milan.ch@agastyaservicehub.com | +91-8983575960
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -331,7 +333,7 @@ function initMobileMenu() {
 }
 
 /* ==========================================================================
-   7. CYNCLY ROLE TABS SYSTEM (WITH MOBILE AUTO-SCROLL)
+   7. ROLE TABS SYSTEM (WITH MOBILE AUTO-SCROLL)
    ========================================================================== */
 function initRoleTabs() {
   const tabButtons = document.querySelectorAll('.role-tab-btn');
@@ -390,7 +392,7 @@ function initSalaryCalculator() {
     if (count <= 3) {
       turnaroundDisplay.innerText = 'Immediate to 15 Days';
     } else if (count <= 10) {
-      turnaroundDisplay.innerText = '15 - 30 Days (Standard Cyncly Model)';
+      turnaroundDisplay.innerText = '15 - 30 Days (Standard Staffing Model)';
     } else {
       turnaroundDisplay.innerText = '30 - 45 Days (Phased Batch Deployment)';
     }
@@ -430,7 +432,7 @@ function initModals() {
   openApplyBtns.forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      const prefillRole = btn.getAttribute('data-apply-role') || 'Trainee Content Engineer (Cyncly Agreement)';
+      const prefillRole = btn.getAttribute('data-apply-role') || 'Trainee Content Engineer';
       const roleField = document.getElementById('modalApplyRoleField');
       if (roleField) roleField.value = prefillRole;
 
@@ -510,11 +512,11 @@ function initContactForms() {
       }
 
       const waText = encodeURIComponent(
-        `*New Inquiry - Agastya Services*\n\n*Name:* ${name}\n*Email:* ${email}\n*Phone:* ${phone}\n*Category:* ${type}\n*Message:* ${message || 'N/A'}`
+        `*New Inquiry - Agastya Services*\n\n*To:* Milan Chaudhari\n*Name:* ${name}\n*Email:* ${email}\n*Phone:* ${phone}\n*Category:* ${type}\n*Message:* ${message || 'N/A'}`
       );
       const whatsappUrl = `https://wa.me/918983575960?text=${waText}`;
 
-      showToast('Redirecting to WhatsApp to send message to Hitesh Pandey...', 'success');
+      showToast('Redirecting to WhatsApp to send message to Milan Chaudhari...', 'success');
       setTimeout(() => {
         window.open(whatsappUrl, '_blank');
       }, 750);
@@ -540,11 +542,11 @@ function initContactForms() {
       }
 
       const waText = encodeURIComponent(
-        `*Job Application - Agastya Services*\n\n*Candidate:* ${name}\n*Applied Role:* ${role}\n*Phone:* ${phone}\n*Email:* ${email}\n*Qualification:* ${qual}\n*Key Skills/Tools:* ${skills || 'Diploma/BSC/BE Graduate'}\n\n*Status:* Ready for Cyncly / Agastya Evaluation`
+        `*Job Application - Agastya Services*\n\n*Candidate:* ${name}\n*Applied Role:* ${role}\n*Phone:* ${phone}\n*Email:* ${email}\n*Qualification:* ${qual}\n*Key Skills/Tools:* ${skills || 'Diploma/BSC/BE Graduate'}\n\n*Status:* Ready for Technical Evaluation`
       );
       const whatsappUrl = `https://wa.me/918983575960?text=${waText}`;
 
-      showToast('Application drafted! Connecting directly to Hitesh Pandey...', 'success');
+      showToast('Application drafted! Connecting directly to Milan Chaudhari...', 'success');
       setTimeout(() => {
         window.open(whatsappUrl, '_blank');
         document.getElementById('applyModal')?.classList.add('hidden');
@@ -576,7 +578,7 @@ function initContactForms() {
       );
       const whatsappUrl = `https://wa.me/918983575960?text=${waText}`;
 
-      showToast('Requisition received! Opening direct channel with Hitesh Pandey...', 'success');
+      showToast('Requisition received! Opening direct channel with Milan Chaudhari...', 'success');
       setTimeout(() => {
         window.open(whatsappUrl, '_blank');
         document.getElementById('hireModal')?.classList.add('hidden');
